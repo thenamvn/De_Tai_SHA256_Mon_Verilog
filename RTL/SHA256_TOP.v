@@ -1,0 +1,96 @@
+module SHA256_TOP(
+	input wire 		 		CLK,
+	input wire 		 		RST,
+	input wire				start_in,
+	input wire	[31:0]		message0_in,
+	input wire	[31:0]		message1_in,
+	input wire	[31:0]		message2_in,
+	input wire	[31:0]		message3_in,
+	input wire	[31:0]		message4_in,
+	input wire	[31:0]		message5_in,
+	input wire	[31:0]		message6_in,
+	input wire	[31:0]		message7_in,
+	input wire	[31:0]		message8_in,
+	input wire	[31:0]		message9_in,
+	input wire	[31:0]		message10_in,
+	input wire	[31:0]		message11_in,
+	input wire	[31:0]		message12_in,
+	input wire	[31:0]		message13_in,
+	input wire	[31:0]		message14_in,
+	input wire	[31:0]		message15_in,
+	input wire	[31:0]		state0_in,
+	input wire	[31:0]		state1_in,
+	input wire	[31:0]		state2_in,
+	input wire	[31:0]		state3_in,
+	input wire	[31:0]		state4_in,
+	input wire	[31:0]		state5_in,
+	input wire	[31:0]		state6_in,
+	input wire	[31:0]		state7_in,
+	output wire	[31:0]		state0_out,
+	output wire	[31:0]		state1_out,
+	output wire	[31:0]		state2_out,
+	output wire	[31:0]		state3_out,
+	output wire	[31:0]		state4_out,
+	output wire	[31:0]		state5_out,
+	output wire	[31:0]		state6_out,
+	output wire	[31:0]		state7_out,
+	output wire 			valid_out
+	);
+	
+	///// Tín hiệu wire
+	wire [31:0]		message_w;
+	wire [6:0] 		round_w;
+	wire [1:0]		FSM_state_w;
+	
+	Message_Compression message_compression(
+		.CLK(CLK),
+		.RST(RST),
+		.start_in(start_in),
+		.message_in(message_w),
+		.state0_in(state0_in),
+		.state1_in(state1_in),
+		.state2_in(state2_in),
+		.state3_in(state3_in),
+		.state4_in(state4_in),
+		.state5_in(state5_in),
+		.state6_in(state6_in),
+		.state7_in(state7_in),
+		.FSM_state_in(FSM_state_w),
+		.round_in(round_w),
+		.state0_out(state0_out),
+		.state1_out(state1_out),
+		.state2_out(state2_out),
+		.state3_out(state3_out),
+		.state4_out(state4_out),
+		.state5_out(state5_out),
+		.state6_out(state6_out),
+		.state7_out(state7_out),
+		.valid_out(valid_out)
+	);
+	
+	Message_Expansion message_expansion(
+		.CLK(CLK),
+		.RST(RST),
+		.start_in(start_in),
+		.message0_in(message0_in),
+		.message1_in(message1_in),
+		.message2_in(message2_in),
+		.message3_in(message3_in),
+		.message4_in(message4_in),
+		.message5_in(message5_in),
+		.message6_in(message6_in),
+		.message7_in(message7_in),
+		.message8_in(message8_in),
+		.message9_in(message9_in),
+		.message10_in(message10_in),
+		.message11_in(message11_in),
+		.message12_in(message12_in),
+		.message13_in(message13_in),
+		.message14_in(message14_in),
+		.message15_in(message15_in),
+		.message_out(message_w),
+		.round_out(round_w),
+		.FSM_state_out(FSM_state_w)
+	);
+	
+endmodule
