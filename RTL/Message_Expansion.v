@@ -212,17 +212,20 @@ module Message_Expansion(
 		end
 	end
 
+	// Fixed round counter logic
 	always @(posedge CLK or negedge RST) begin
 		if (RST == 0) begin
 			round_r <= 0;
 		end
 		else begin
-		if(state_r != IDLE)
-			round_r <= round_r + 1;
-		else
-			round_r <= 0;
-	  end
-	end		  
+			if(state_r == IDLE)
+				round_r <= 0;
+			else if((state_r == ROUND0to15 && round_r < 15) || 
+					(state_r == ROUND16to63 && round_r < 63) ||
+					(state_r == ROUND64 && round_r < 64))
+				round_r <= round_r + 1;
+		end
+	end  
 	
 	///// Máy trạng thái FSM
 	
@@ -250,8 +253,9 @@ module Message_Expansion(
 		  else
 			next_state_r = ROUND64;
 		endcase
-	
-	always @(posedge CLK)
+	// Error 2: Missing proper reset synchronization
+	// Fixed state register update with proper reset handling
+	always @(posedge CLK or negedge RST)
 		  if (RST == 0)
 			state_r <= IDLE;
 		  else

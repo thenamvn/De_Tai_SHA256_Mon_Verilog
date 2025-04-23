@@ -144,7 +144,11 @@ module Message_Compression(
 	);
 	
 	assign t1_w			= h_r + EP1_w + CH_w + K_r + message_in;
-	assign t2_w			= EP0_w - MAJ_w;
+	// Error: Should be addition, not subtraction
+	// assign t2_w			= EP0_w - MAJ_w;
+
+	//Fixed
+	assign t2_w = EP0_w + MAJ_w;
 	
 	// For round 0 to 63
 	assign h_w = g_r;
@@ -213,7 +217,9 @@ module Message_Compression(
 					h_r	 	<= 0;
 				end
 			end
-			else if((FSM_state_in == ROUND0to15)) begin
+			// Also, needs to update state check for round 16-63:
+    		// In the always block for FSM state transitions:
+			else if((FSM_state_in == ROUND0to15) || (FSM_state_in == ROUND16to63)) begin
 				a_r	 	<= a_w;
 				b_r	 	<= b_w;
 				c_r	 	<= c_w;
